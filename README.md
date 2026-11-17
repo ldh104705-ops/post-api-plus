@@ -7,13 +7,61 @@
 
 ## 과제 요구사항
 
-- [ ] 프로젝트 새로 생성
-- [ ] 글 3건, 댓글 5건 자동생성
-- [ ] 글 작성 기능/테스트케이스
-- [ ] 글 삭제 기능/테스트케이스
-- [ ] 댓글 작성 기능/테스트케이스
-- [ ] 댓글 삭제 기능/테스트케이스
-- [ ] 리포지터리 제출
+| 요구사항 | 구현 | 테스트 | 커밋 |
+|---|---|---|---|
+| 프로젝트 새로 생성 | Spring Boot 4.1.2, dev/test DB 분리 | `BackApplicationTests` | 001 |
+| 글 3건, 댓글 5건 자동생성 | `BaseInitData` | `BaseInitDataTest` | 003 |
+| 글 작성 기능/테스트케이스 | `POST /api/v1/posts` | `ApiV1PostControllerTest` t1, t2 | 004 |
+| 글 삭제 기능/테스트케이스 | `DELETE /api/v1/posts/{id}` | `ApiV1PostControllerTest` t3, t4 | 005 |
+| 댓글 작성 기능/테스트케이스 | `POST /api/v1/posts/{postId}/comments` | `ApiV1PostCommentControllerTest` t1 | 006 |
+| 댓글 삭제 기능/테스트케이스 | `DELETE /api/v1/posts/{postId}/comments/{id}` | `ApiV1PostCommentControllerTest` t2, t3 | 007 |
+| 리포지터리 제출 | 이 저장소 | — | 008 |
+| 커밋을 나눠서 진행 | 새 개념 하나 = 커밋 하나, 실패 실험도 커밋으로 기록 | — | 아래 작업내역 |
+
+## API
+
+| 기능 | 요청 | 성공 응답 | 실패 응답 |
+|---|---|---|---|
+| 글 작성 | `POST /api/v1/posts` `{"title":"제목","content":"내용"}` | 201 `201-1` + 작성된 글 | 400 `400-1` (제목 2~100자, 내용 2~5000자) |
+| 글 삭제 | `DELETE /api/v1/posts/{id}` | 200 `200-1` (댓글도 함께 삭제) | 404 `404-1` |
+| 댓글 작성 | `POST /api/v1/posts/{postId}/comments` `{"content":"내용"}` | 201 `201-1` + 작성된 댓글 | 400 `400-1` (2~100자), 404 `404-1` (없는 글) |
+| 댓글 삭제 | `DELETE /api/v1/posts/{postId}/comments/{id}` | 200 `200-1` | 404 `404-1` (없는 글 또는 그 글에 없는 댓글) |
+
+응답 형식 (RsData):
+
+```json
+{
+  "resultCode": "201-1",
+  "msg": "4번 글이 작성되었습니다.",
+  "data": { "id": 4, "createDate": "...", "modifyDate": "...", "title": "제목", "content": "내용" }
+}
+```
+
+- `resultCode`는 `HTTP응답코드-세부코드` 형식이고, 앞자리가 실제 HTTP 응답코드가 됩니다 (`ResponseAspect`).
+
+## 실행과 테스트
+
+```bash
+./gradlew bootRun
+```
+
+```bash
+./gradlew test
+```
+
+- 서버를 켜면 샘플 데이터(글 3건, 댓글 5건)가 들어갑니다. 1번 글에 댓글 1·2·3, 2번 글에 댓글 4·5가 있습니다.
+- 개발 DB는 프로젝트 폴더의 `db_dev.mv.db` 파일입니다. 지우고 다시 켜면 샘플 데이터 상태로 돌아갑니다.
+- 테스트는 메모리 DB를 쓰고, 테스트마다 롤백되어 항상 샘플 데이터 상태에서 시작합니다.
+
+## 프로젝트 구조
+
+```
+src/main/java/com/back
+├─ BackApplication.java
+├─ domain/post/post/        글: controller, dto, entity, repository, service
+├─ domain/post/postComment/ 댓글: controller, dto, entity
+└─ global/                  공통: aspect(ResponseAspect), globalExceptionHandler, initData, jpa(BaseEntity), rsData
+```
 
 ## 참고 자료
 
@@ -218,3 +266,10 @@
 - 작업: 댓글 삭제 테스트(t2: 1번 글의 1번 댓글 삭제 → 200, 글의 댓글 목록과 DB에서 사라짐, 댓글 5건 → 4건), 없는 댓글 삭제 테스트(t3: 1번 글에 없는 4번 댓글 → 404, 댓글 5건 그대로)
 - 이유: 과제 요구사항(댓글 삭제 테스트케이스). 404 테스트는 "다른 글의 댓글은 이 글 주소로 지울 수 없다"는 것도 함께 보여 줌
 - 결과: 테스트 9개 모두 통과
+
+### 008-01 제출, 완료, README 정리
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/008-01)
+- 작업: README에 과제 요구사항별 구현·테스트·커밋 대응표, API 표와 응답 형식, 실행·테스트 방법, 프로젝트 구조 정리
+- 이유: 과제 요구사항(리포지터리 제출). 저장소를 처음 보는 사람이 무엇이 어디에 있는지 바로 찾을 수 있게 하기 위함
+- 결과: 테스트 9개 통과. 새 DB로 서버를 켜고 글 작성(201) → 댓글 작성(201) → 댓글 삭제(200) → 글 삭제(200) → 빈 제목 글 작성(400) → 지운 글 다시 삭제(404) 순서로 호출해 모두 의도대로 동작 확인
