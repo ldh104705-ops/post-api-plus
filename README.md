@@ -162,3 +162,11 @@
 - 작업: GlobalExceptionHandler에 NoSuchElementException → `404-1` RsData + HTTP 404 추가. 없는 글 삭제 시 404 테스트(t4) 추가
 - 이유: 없는 글을 지우려 하면 `findById(id).get()`에서 예외가 나 500(서버 오류)이 되던 것을, "찾을 수 없음"(404)으로 정확히 알려 주기 위함
 - 결과: DELETE /api/v1/posts/100 → `{"resultCode":"404-1","msg":"해당 데이터가 존재하지 않습니다.","data":null}` (HTTP 404), 테스트 6개 통과
+
+### 006-01 댓글 작성, 시작, 실험(실패), 테스트 먼저 작성 (TDD)
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/006-01)
+- 강의: 14172 10강(댓글 주소), 56강(TDD로 댓글 작성)
+- 작업: 댓글 작성 테스트(ApiV1PostCommentControllerTest t1)를 기능보다 먼저 작성. 컴파일만 되도록 빈 ApiV1PostCommentController(`/api/v1/posts/{postId}/comments`)를 만듦
+- 이유: TDD(테스트 주도 개발). "무엇이 되어야 하는지"를 테스트로 먼저 정해 두고, 그 테스트를 통과시키는 만큼만 구현하기 위함
+- 결과: **실패(의도한 빨간 막대)**. 아직 댓글 작성 기능이 없어 요청을 처리할 컨트롤러 메서드가 없음. 기존 테스트 6개는 통과
