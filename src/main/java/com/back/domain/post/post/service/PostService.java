@@ -40,6 +40,12 @@ public class PostService {
         return post.addComment(content);
     }
 
+    // 지금까지 모아 둔 변경(INSERT 등)을 DB에 바로 보낸다
+    // 커밋은 하지 않는다: 트랜잭션이 실패하면 여전히 롤백된다 (강의 56강)
+    public void flush() {
+        postRepository.flush();
+    }
+
     // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
     public Optional<Post> findLatest() {
         return postRepository.findFirstByOrderByIdDesc();

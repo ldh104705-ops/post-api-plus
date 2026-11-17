@@ -39,6 +39,10 @@ public class ApiV1PostCommentController {
 
         PostComment postComment = postService.writeComment(post, reqBody.content());
 
+        // 댓글은 리스트에 추가만 된 상태라 INSERT 전 → id가 0, 날짜가 null
+        // flush로 INSERT를 지금 실행해서 DB가 매긴 번호와 날짜를 받아 온다
+        postService.flush();
+
         return new RsData<>(
                 "201-1",
                 "%d번 댓글이 작성되었습니다.".formatted(postComment.getId()),

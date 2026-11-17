@@ -186,3 +186,11 @@
 - 작업: PostCommentDto(record), PostService.writeComment, 댓글 작성 API `POST /api/v1/posts/{postId}/comments`(PostCommentWriteReqBody, @Valid, @Transactional, `RsData<PostCommentDto>` `201-1`) 구현
 - 이유: 006-01의 테스트를 통과시키기 위한 구현
 - 결과: **실패**. 응답이 `{"resultCode":"201-1","msg":"0번 댓글이 작성되었습니다.","data":{"id":0,"createDate":null,"modifyDate":null,...}}`. DB에는 6번으로 저장되지만, INSERT가 트랜잭션이 끝날 때(응답을 만든 뒤) 실행되어 응답을 만드는 순간에는 아직 번호와 날짜가 없음 → 다음 커밋에서 해결
+
+### 006-04 댓글 작성, 완료, flush()로 INSERT를 앞당겨 댓글 번호 확보
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/006-04)
+- 강의: 14172 56강
+- 작업: PostService.flush() 추가, 댓글 작성 직후 flush()를 호출해 INSERT를 바로 실행
+- 이유: 006-03에서 응답을 만드는 시점에 댓글이 아직 INSERT 전이라 번호가 0이던 문제 해결. flush는 커밋이 아니라 "미뤄 둔 SQL을 지금 실행"이므로, 이후 오류가 나면 여전히 롤백됨
+- 결과: 댓글 작성 테스트 통과(TDD 초록). 실제 서버에서 `"6번 댓글이 작성되었습니다."`, id·날짜 정상. 없는 글에 작성은 404, 빈 내용은 400도 확인
