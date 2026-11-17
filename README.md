@@ -178,3 +178,11 @@
 - 작업: RsData의 data 타입을 PostDto 고정에서 제네릭 `T`로 변경, 데이터 없는 응답용 2인자 생성자 추가. 글 작성은 `RsData<PostDto>`, 글 삭제와 예외 응답은 `RsData<Void>`로 명시
 - 이유: 댓글 작성 응답에는 댓글(PostCommentDto)을 담아야 하는데, PostDto 전용 RsData로는 담을 수 없음. Object로 바꾸면 무엇이 들어있는지 알 수 없으므로 제네릭 사용
 - 결과: 글 작성(201)·삭제(200)·없는 글 삭제(404) 응답은 그대로. 기존 테스트 6개 통과, 댓글 작성 테스트는 아직 실패(구현 전)
+
+### 006-03 댓글 작성, 실험(실패), 구현했지만 응답의 댓글 번호가 0
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/006-03)
+- 강의: 14172 56강
+- 작업: PostCommentDto(record), PostService.writeComment, 댓글 작성 API `POST /api/v1/posts/{postId}/comments`(PostCommentWriteReqBody, @Valid, @Transactional, `RsData<PostCommentDto>` `201-1`) 구현
+- 이유: 006-01의 테스트를 통과시키기 위한 구현
+- 결과: **실패**. 응답이 `{"resultCode":"201-1","msg":"0번 댓글이 작성되었습니다.","data":{"id":0,"createDate":null,"modifyDate":null,...}}`. DB에는 6번으로 저장되지만, INSERT가 트랜잭션이 끝날 때(응답을 만든 뒤) 실행되어 응답을 만드는 순간에는 아직 번호와 날짜가 없음 → 다음 커밋에서 해결

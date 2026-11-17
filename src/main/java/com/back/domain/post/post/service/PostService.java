@@ -2,6 +2,7 @@ package com.back.domain.post.post.service;
 
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.repository.PostRepository;
+import com.back.domain.post.postComment.entity.PostComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,11 @@ public class PostService {
     // 글 삭제. 댓글은 cascade REMOVE로 함께 삭제된다
     public void delete(Post post) {
         postRepository.delete(post);
+    }
+
+    // 댓글 작성: 글의 댓글 목록에 추가 (저장은 cascade PERSIST가 트랜잭션 끝에 한다)
+    public PostComment writeComment(Post post, String content) {
+        return post.addComment(content);
     }
 
     // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
