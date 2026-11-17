@@ -29,6 +29,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     // JPA: 자바 객체(엔티티)를 DB 테이블에 저장/조회
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // Validation: @NotBlank, @Size 같은 어노테이션으로 입력값 검사
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // Database
     // H2: 설치 없이 쓰는 가벼운 DB (개발은 파일, 테스트는 메모리)
@@ -46,6 +48,7 @@ dependencies {
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

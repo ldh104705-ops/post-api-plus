@@ -82,3 +82,11 @@
 - 작업: ApiV1PostController에 글 작성 API 추가. 요청 JSON은 PostWriteReqBody로 받고, 응답은 엔티티 대신 PostDto(record)로 반환
 - 이유: 엔티티를 그대로 JSON으로 내보내면 글↔댓글 순환참조와 API 모양 변경 문제가 생기므로 DTO로 분리
 - 결과: `{"title":"제목 4","content":"내용 4"}` 요청 시 4번 글이 만들어지고 JSON 응답 확인. 단, 빈 제목/내용도 그대로 저장되는 문제 발견 → 다음 커밋에서 검증 추가
+
+### 004-02 글 작성, @Valid로 입력값 검증
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/004-02)
+- 강의: 14172 3강(validation 의존성), 22강(@Valid, @NotBlank, @Size)
+- 작업: validation 의존성 추가, PostWriteReqBody에 @NotBlank·@Size(제목 2~100자, 내용 2~5000자), 컨트롤러 파라미터에 @Valid
+- 이유: 빈 제목/내용의 글이 저장되던 문제를 막기 위함
+- 결과: 정상 요청은 200, 빈 제목/내용 요청은 400(스프링 기본 에러 응답)이고 DB에 저장되지 않음(글 4건 유지)

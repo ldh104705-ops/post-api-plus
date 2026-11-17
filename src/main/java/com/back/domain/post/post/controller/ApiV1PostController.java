@@ -3,6 +3,9 @@ package com.back.domain.post.post.controller;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +24,13 @@ public class ApiV1PostController {
     // 요청 본문(JSON)을 받을 객체. 이 컨트롤러에서만 쓰므로 안쪽에 둔다 (강의 22·24강)
     // { "title": "...", "content": "..." } → PostWriteReqBody
     record PostWriteReqBody(
+            // @NotBlank: null, "", "   " 모두 안 됨
+            // @Size: 글자 수 범위
+            @NotBlank
+            @Size(min = 2, max = 100)
             String title,
+            @NotBlank
+            @Size(min = 2, max = 5000)
             String content
     ) {
     }
@@ -29,10 +38,11 @@ public class ApiV1PostController {
     // 글 작성: POST /api/v1/posts
     // 조회는 GET, 생성은 POST (같은 주소라도 HTTP 메서드로 기능을 구분)
     // @RequestBody: 요청 본문의 JSON을 PostWriteReqBody로 바꿔서 받는다
+    // @Valid: 바꾼 뒤 위의 검증 어노테이션을 검사한다. 실패하면 메서드가 실행되지 않고 400 응답
     // @Transactional: DB를 바꾸는 작업이므로 액션 메서드에 트랜잭션 (강의 11강)
     @PostMapping
     @Transactional
-    public PostDto write(@RequestBody PostWriteReqBody reqBody) {
+    public PostDto write(@RequestBody @Valid PostWriteReqBody reqBody) {
         Post post = postService.write(reqBody.title(), reqBody.content());
 
         return new PostDto(post);
