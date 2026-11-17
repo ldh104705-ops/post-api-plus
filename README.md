@@ -34,3 +34,11 @@
 - 작업: git 저장소 초기화(main 브랜치), .gitignore, .gitattributes, README 작성
 - 이유: 모든 작업을 작은 커밋과 태그로 기록해서, 나중에 커밋 하나씩 따라가며 이해하기 위함
 - 결과: 첫 커밋 생성, GitHub 공개 저장소에 업로드
+
+### 001-01 프로젝트 생성, 완료, Spring Boot 4 프로젝트 생성과 개발/테스트 DB 분리
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/001-01)
+- 강의: 14172 1강, 3강
+- 작업: Spring Boot 4.1.2 / Java 25 / Gradle Kotlin DSL 프로젝트 생성 (webmvc, Data JPA, H2, H2 콘솔, Lombok, DevTools), 설정 파일을 yaml로 작성하고 dev(파일 DB) / test(메모리 DB) 프로파일 분리
+- 이유: 개발 데이터는 서버를 껐다 켜도 남아야 하고, 테스트는 매번 깨끗한 DB에서 개발 데이터를 건드리지 않고 돌아야 하기 때문
+- 결과: contextLoads 테스트 통과(메모리 DB), 서버 실행 시 프로젝트 폴더에 db_dev.mv.db 생성 확인, localhost:8080 접속 시 404(아직 API 없음)
