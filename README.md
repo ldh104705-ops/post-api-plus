@@ -58,3 +58,11 @@
 - 작업: Post(글), PostComment(댓글) 엔티티와 1:N 연관관계, cascade(PERSIST, REMOVE)·orphanRemoval, 글 안의 댓글 추가/찾기/삭제 메서드, PostRepository
 - 이유: 댓글은 글에 딸린 데이터이므로 글을 통해서만 추가·삭제하고(댓글 리포지터리 없음), 글이 지워지면 댓글도 함께 지워지게 하기 위함
 - 결과: 서버 실행 시 SQL 로그에서 post, post_comment(post_id 포함) 테이블 생성 확인
+
+### 003-01 샘플 데이터, 시작, 앱 시작 시 글 3건·댓글 5건 자동생성
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/003-01)
+- 강의: 14172 3강
+- 작업: PostService(count, write), BaseInitData(ApplicationRunner + 자기 자신 프록시 `self`로 @Transactional 적용)로 앱 시작 시 샘플 데이터 생성
+- 이유: 과제 요구사항(글 3건, 댓글 5건 자동생성). 데이터가 이미 있으면 건너뛰어 재시작해도 중복 생성되지 않게 함
+- 결과: 개발 DB에 글 1~3, 댓글 1~5(1번 글에 1·2·3, 2번 글에 4·5) 생성 확인. 재시작 후에도 3건/5건 유지
