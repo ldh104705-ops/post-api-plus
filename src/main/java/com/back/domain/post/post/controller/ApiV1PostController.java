@@ -47,8 +47,9 @@ public class ApiV1PostController {
         Post post = postService.write(reqBody.title(), reqBody.content());
 
         // 결과 코드, 메시지, 작성된 글을 함께 응답
+        // 새로 만든 경우에 가장 알맞은 HTTP 응답코드는 201(Created)이므로 201-1
         return new RsData(
-                "200-1",
+                "201-1",
                 "%d번 글이 작성되었습니다.".formatted(post.getId()),
                 new PostDto(post)
         );
