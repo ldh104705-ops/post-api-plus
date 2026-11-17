@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,10 +57,11 @@ public class ApiV1PostController {
         );
     }
 
-    // 글 삭제: GET /api/v1/posts/{id}/delete
-    // 원래 삭제는 GET으로 만들면 안 되지만, 브라우저 주소창에서 바로 호출해 보려고 일단 GET으로 만든다 (강의 16강)
+    // 글 삭제: DELETE /api/v1/posts/{id}
+    // 주소는 "대상(몇 번 글)"만 나타내고, "무엇을 할지(삭제)"는 HTTP 메서드로 나타낸다 (강의 21강)
+    // GET은 조회용이라, GET으로 삭제하면 브라우저 미리 불러오기나 검색엔진 방문만으로 글이 지워질 수 있다
     // @PathVariable: 주소의 {id} 부분을 int id로 받는다
-    @GetMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     @Transactional
     public RsData delete(@PathVariable int id) {
         Post post = postService.findById(id).get();

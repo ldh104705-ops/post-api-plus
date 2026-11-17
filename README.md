@@ -138,3 +138,11 @@
 - 작업: PostService.findById·delete 추가, 글 삭제 API를 일단 GET 방식(`/{id}/delete`)으로 구현. 응답은 RsData(`200-1`, data 없음)
 - 이유: 브라우저 주소창에서 바로 호출해 동작을 확인하기 위해 강의처럼 GET으로 먼저 만듦. 원래 삭제는 GET이면 안 되므로 다음 커밋에서 DELETE로 바꿈
 - 결과: 1번 글 삭제 → `{"resultCode":"200-1","msg":"1번 글이 삭제되었습니다.","data":null}`. DB에서 글 1번과 그 댓글 1·2·3번이 함께 삭제됨(cascade REMOVE), 글 2·3번과 댓글 4·5번은 남음
+
+### 005-02 글 삭제, GET 대신 DELETE 메서드로 변경
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/005-02)
+- 강의: 14172 21강
+- 작업: `GET /api/v1/posts/{id}/delete` → `DELETE /api/v1/posts/{id}` (@DeleteMapping)
+- 이유: 주소는 대상(몇 번 글)만, 동작(삭제)은 HTTP 메서드로 나타내는 것이 REST 규칙. GET은 조회용이라 미리 불러오기나 검색엔진 방문만으로 삭제될 위험이 있음
+- 결과: 예전 주소(GET .../delete)는 404, DELETE /api/v1/posts/1 → `200-1`, DB에서 1번 글 삭제 확인
