@@ -3,6 +3,7 @@ package com.back.domain.post.post.controller;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import com.back.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -42,9 +43,14 @@ public class ApiV1PostController {
     // @Transactional: DB를 바꾸는 작업이므로 액션 메서드에 트랜잭션 (강의 11강)
     @PostMapping
     @Transactional
-    public PostDto write(@RequestBody @Valid PostWriteReqBody reqBody) {
+    public RsData write(@RequestBody @Valid PostWriteReqBody reqBody) {
         Post post = postService.write(reqBody.title(), reqBody.content());
 
-        return new PostDto(post);
+        // 결과 코드, 메시지, 작성된 글을 함께 응답
+        return new RsData(
+                "200-1",
+                "%d번 글이 작성되었습니다.".formatted(post.getId()),
+                new PostDto(post)
+        );
     }
 }
