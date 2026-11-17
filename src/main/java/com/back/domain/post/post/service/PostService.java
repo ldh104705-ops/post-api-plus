@@ -24,6 +24,16 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    // 없을 수도 있으므로 Optional로 돌려준다
+    public Optional<Post> findById(int id) {
+        return postRepository.findById(id);
+    }
+
+    // 글 삭제. 댓글은 cascade REMOVE로 함께 삭제된다
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
+
     // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
     public Optional<Post> findLatest() {
         return postRepository.findFirstByOrderByIdDesc();

@@ -130,3 +130,11 @@
 - 작업: @ControllerAdvice 전역 예외 처리기에서 MethodArgumentNotValidException을 `400-1` RsData(실패 항목을 "필드-검증종류-메시지"로 정렬)로 바꿔 HTTP 400 응답. 제목 없이 글 작성 시 400 테스트(t2) 추가
 - 이유: 검증 실패 시 스프링 기본 에러 JSON 대신, 성공 응답과 같은 RsData 모양으로 무엇이 틀렸는지 알려 주기 위함
 - 결과: `{"resultCode":"400-1","msg":"title-NotBlank-공백일 수 없습니다\ntitle-Size-크기가 2에서 100 사이여야 합니다","data":null}` (HTTP 400), 테스트 4개 통과
+
+### 005-01 글 삭제, 시작, GET /api/v1/posts/{id}/delete
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/005-01)
+- 강의: 14172 16강
+- 작업: PostService.findById·delete 추가, 글 삭제 API를 일단 GET 방식(`/{id}/delete`)으로 구현. 응답은 RsData(`200-1`, data 없음)
+- 이유: 브라우저 주소창에서 바로 호출해 동작을 확인하기 위해 강의처럼 GET으로 먼저 만듦. 원래 삭제는 GET이면 안 되므로 다음 커밋에서 DELETE로 바꿈
+- 결과: 1번 글 삭제 → `{"resultCode":"200-1","msg":"1번 글이 삭제되었습니다.","data":null}`. DB에서 글 1번과 그 댓글 1·2·3번이 함께 삭제됨(cascade REMOVE), 글 2·3번과 댓글 4·5번은 남음

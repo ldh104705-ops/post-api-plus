@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,24 @@ public class ApiV1PostController {
                 "201-1",
                 "%d번 글이 작성되었습니다.".formatted(post.getId()),
                 new PostDto(post)
+        );
+    }
+
+    // 글 삭제: GET /api/v1/posts/{id}/delete
+    // 원래 삭제는 GET으로 만들면 안 되지만, 브라우저 주소창에서 바로 호출해 보려고 일단 GET으로 만든다 (강의 16강)
+    // @PathVariable: 주소의 {id} 부분을 int id로 받는다
+    @GetMapping("/{id}/delete")
+    @Transactional
+    public RsData delete(@PathVariable int id) {
+        Post post = postService.findById(id).get();
+
+        postService.delete(post);
+
+        // 돌려줄 데이터가 없으므로 data는 null
+        return new RsData(
+                "200-1",
+                "%d번 글이 삭제되었습니다.".formatted(id),
+                null
         );
     }
 }
