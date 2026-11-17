@@ -51,8 +51,9 @@ public class ApiV1PostCommentController {
     }
 
     // 댓글 삭제: DELETE /api/v1/posts/{postId}/comments/{id}
-    // 실험: @Transactional 없이 만들어 본다 (강의 11강)
+    // @Transactional 필수: 목록에서 뺀 변화를 트랜잭션 커밋 때 감지해서 orphanRemoval이 DELETE를 실행한다 (강의 11·12강)
     @DeleteMapping("/{id}")
+    @Transactional
     public RsData<Void> delete(
             @PathVariable int postId,
             @PathVariable int id

@@ -202,3 +202,11 @@
 - 작업: PostService.deleteComment, 댓글 삭제 API `DELETE /api/v1/posts/{postId}/comments/{id}` 구현. 일부러 @Transactional을 붙이지 않음
 - 이유: 댓글 삭제는 "글의 댓글 목록에서 빼기 → orphanRemoval이 DELETE"로 동작하는데, 이것이 트랜잭션 없이도 되는지 확인
 - 결과: **실패**. 응답은 `"1번 댓글이 삭제되었습니다."`(200)인데, DB에는 1번 댓글이 그대로 있고 DELETE SQL도 실행되지 않음 → 다음 커밋에서 해결
+
+### 007-02 댓글 삭제, @Transactional을 붙여 실제로 삭제
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/007-02)
+- 강의: 14172 11·12강
+- 작업: 댓글 삭제 액션 메서드에 @Transactional 추가
+- 이유: orphanRemoval은 트랜잭션이 커밋될 때 "목록에서 빠진 댓글"을 감지해 DELETE를 실행하므로 트랜잭션이 꼭 필요함
+- 결과: DELETE /api/v1/posts/1/comments/1 → 200, SQL 로그에 `delete from post_comment` 실행, DB에서 1번 댓글이 사라지고 2~5번만 남음
