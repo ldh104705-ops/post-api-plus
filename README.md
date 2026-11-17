@@ -106,3 +106,11 @@
 - 작업: 글 작성의 resultCode를 `"201-1"`(201 Created)로 변경
 - 이유: 새로 만든 경우에 가장 알맞은 HTTP 응답코드는 201이므로, resultCode 앞자리도 201로 맞춤
 - 결과: **실패**. JSON의 resultCode는 201-1이지만 실제 HTTP 응답코드는 여전히 200. resultCode는 그냥 JSON 안의 글자일 뿐, HTTP 응답코드를 바꾸지 않음 → 다음 커밋에서 해결
+
+### 004-05 글 작성, ResponseAspect로 resultCode 앞자리를 HTTP 응답코드에 반영
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/004-05)
+- 강의: 14172 27·28·31·37강
+- 작업: RsData에 statusCode(resultCode 앞자리, JSON에서는 숨김) 추가, AOP로 RsData를 반환하는 컨트롤러 액션이 끝나면 HTTP 응답코드를 statusCode로 설정하는 ResponseAspect 추가
+- 이유: 액션마다 ResponseEntity로 상태코드를 따로 지정하는 대신, resultCode 하나만 정하면 HTTP 응답코드가 자동으로 맞춰지게 하기 위함
+- 결과: 글 작성 응답이 HTTP 201로 바뀜. JSON에는 statusCode가 나오지 않음
