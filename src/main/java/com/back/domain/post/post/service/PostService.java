@@ -5,6 +5,8 @@ import com.back.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 // 글 관련 기능을 모아 둔 서비스
 // @Transactional은 여기에 붙이지 않고, 호출하는 쪽(컨트롤러 액션, BaseInitData)에 붙인다 (강의 11강)
 @Service
@@ -20,5 +22,10 @@ public class PostService {
         Post post = new Post(title, content);
 
         return postRepository.save(post);
+    }
+
+    // 가장 최근 글 (테스트에서 "방금 작성한 글"을 가져올 때 사용)
+    public Optional<Post> findLatest() {
+        return postRepository.findFirstByOrderByIdDesc();
     }
 }

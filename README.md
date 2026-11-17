@@ -114,3 +114,11 @@
 - 작업: RsData에 statusCode(resultCode 앞자리, JSON에서는 숨김) 추가, AOP로 RsData를 반환하는 컨트롤러 액션이 끝나면 HTTP 응답코드를 statusCode로 설정하는 ResponseAspect 추가
 - 이유: 액션마다 ResponseEntity로 상태코드를 따로 지정하는 대신, resultCode 하나만 정하면 HTTP 응답코드가 자동으로 맞춰지게 하기 위함
 - 결과: 글 작성 응답이 HTTP 201로 바뀜. JSON에는 statusCode가 나오지 않음
+
+### 004-06 글 작성, 글 작성 테스트 (MockMvc)
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/004-06)
+- 강의: 14172 33·35·38·39강
+- 작업: ApiV1PostControllerTest에 글 작성 테스트(t1). MockMvc로 POST 요청 → 처리한 컨트롤러·메서드, HTTP 201, resultCode, msg, data의 모든 필드를 DB의 최신 글과 비교. 이를 위해 PostRepository.findFirstByOrderByIdDesc, PostService.findLatest 추가
+- 이유: 과제 요구사항(글 작성 테스트케이스). 테스트마다 롤백되므로 항상 샘플 데이터 상태에서 검사
+- 결과: 글 작성 테스트 통과
