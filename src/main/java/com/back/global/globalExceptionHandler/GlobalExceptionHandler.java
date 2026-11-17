@@ -21,16 +21,16 @@ public class GlobalExceptionHandler {
     // 없는 데이터를 찾으면: 서비스가 돌려준 빈 Optional에 컨트롤러가 .get()을 부르면 NoSuchElementException이 던져진다
     // 이것을 404(찾을 수 없음)로 바꾼다 (강의 48강)
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<RsData> handle(NoSuchElementException ex) {
+    public ResponseEntity<RsData<Void>> handle(NoSuchElementException ex) {
         return new ResponseEntity<>(
-                new RsData("404-1", "해당 데이터가 존재하지 않습니다.", null),
+                new RsData<>("404-1", "해당 데이터가 존재하지 않습니다."),
                 NOT_FOUND
         );
     }
 
     // @Valid 검증에 실패하면 컨트롤러 메서드가 실행되지 않고 MethodArgumentNotValidException이 던져진다
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<RsData> handle(MethodArgumentNotValidException ex) {
+    public ResponseEntity<RsData<Void>> handle(MethodArgumentNotValidException ex) {
         // 실패한 항목들을 "필드-검증종류-메시지" 형태로 만들고, 순서가 매번 같도록 정렬해서 줄바꿈으로 잇는다
         // 예) title-NotBlank-must not be blank
         String msg = ex.getBindingResult()
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
         // 예외 처리기는 ResponseAspect 대상이 아니므로 ResponseEntity로 HTTP 400을 직접 지정한다
         return new ResponseEntity<>(
-                new RsData("400-1", msg, null),
+                new RsData<>("400-1", msg),
                 BAD_REQUEST
         );
     }

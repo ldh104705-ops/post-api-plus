@@ -170,3 +170,11 @@
 - 작업: 댓글 작성 테스트(ApiV1PostCommentControllerTest t1)를 기능보다 먼저 작성. 컴파일만 되도록 빈 ApiV1PostCommentController(`/api/v1/posts/{postId}/comments`)를 만듦
 - 이유: TDD(테스트 주도 개발). "무엇이 되어야 하는지"를 테스트로 먼저 정해 두고, 그 테스트를 통과시키는 만큼만 구현하기 위함
 - 결과: **실패(의도한 빨간 막대)**. 아직 댓글 작성 기능이 없어 요청을 처리할 컨트롤러 메서드가 없음. 기존 테스트 6개는 통과
+
+### 006-02 댓글 작성, RsData를 제네릭 RsData<T>로 변경
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/006-02)
+- 강의: 14172 16~19강
+- 작업: RsData의 data 타입을 PostDto 고정에서 제네릭 `T`로 변경, 데이터 없는 응답용 2인자 생성자 추가. 글 작성은 `RsData<PostDto>`, 글 삭제와 예외 응답은 `RsData<Void>`로 명시
+- 이유: 댓글 작성 응답에는 댓글(PostCommentDto)을 담아야 하는데, PostDto 전용 RsData로는 담을 수 없음. Object로 바꾸면 무엇이 들어있는지 알 수 없으므로 제네릭 사용
+- 결과: 글 작성(201)·삭제(200)·없는 글 삭제(404) 응답은 그대로. 기존 테스트 6개 통과, 댓글 작성 테스트는 아직 실패(구현 전)

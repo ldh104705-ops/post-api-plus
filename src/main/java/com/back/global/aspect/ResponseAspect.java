@@ -42,7 +42,7 @@ public class ResponseAspect {
         Object proceed = joinPoint.proceed();
 
         // 결과(RsData)의 statusCode를 HTTP 응답코드로 설정
-        RsData rsData = (RsData) proceed;
+        RsData<?> rsData = (RsData<?>) proceed;
         response.setStatus(rsData.statusCode());
 
         return proceed;

@@ -45,12 +45,12 @@ public class ApiV1PostController {
     // @Transactional: DB를 바꾸는 작업이므로 액션 메서드에 트랜잭션 (강의 11강)
     @PostMapping
     @Transactional
-    public RsData write(@RequestBody @Valid PostWriteReqBody reqBody) {
+    public RsData<PostDto> write(@RequestBody @Valid PostWriteReqBody reqBody) {
         Post post = postService.write(reqBody.title(), reqBody.content());
 
         // 결과 코드, 메시지, 작성된 글을 함께 응답
         // 새로 만든 경우에 가장 알맞은 HTTP 응답코드는 201(Created)이므로 201-1
-        return new RsData(
+        return new RsData<>(
                 "201-1",
                 "%d번 글이 작성되었습니다.".formatted(post.getId()),
                 new PostDto(post)
@@ -63,16 +63,15 @@ public class ApiV1PostController {
     // @PathVariable: 주소의 {id} 부분을 int id로 받는다
     @DeleteMapping("/{id}")
     @Transactional
-    public RsData delete(@PathVariable int id) {
+    public RsData<Void> delete(@PathVariable int id) {
         Post post = postService.findById(id).get();
 
         postService.delete(post);
 
-        // 돌려줄 데이터가 없으므로 data는 null
-        return new RsData(
+        // 돌려줄 데이터가 없으므로 RsData<Void> + data 없는 생성자
+        return new RsData<>(
                 "200-1",
-                "%d번 글이 삭제되었습니다.".formatted(id),
-                null
+                "%d번 글이 삭제되었습니다.".formatted(id)
         );
     }
 }
