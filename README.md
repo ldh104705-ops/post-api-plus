@@ -50,3 +50,11 @@
 - 작업: 모든 엔티티의 공통 필드(id, createDate, modifyDate)를 BaseEntity에 모으고, @EnableJpaAuditing으로 날짜가 자동 기록되게 함. id 기반 equals/hashCode 정의
 - 이유: 글과 댓글 모두 같은 공통 필드가 필요하므로 한 곳에서 관리하고, 날짜를 직접 넣는 실수를 없애기 위함
 - 결과: 컴파일과 contextLoads 테스트 통과 (아직 엔티티가 없어 테이블은 생기지 않음)
+
+### 002-02 엔티티, 완료, Post·PostComment 연관관계와 리포지터리
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/002-02)
+- 강의: 14172 3강, 12강, 16강
+- 작업: Post(글), PostComment(댓글) 엔티티와 1:N 연관관계, cascade(PERSIST, REMOVE)·orphanRemoval, 글 안의 댓글 추가/찾기/삭제 메서드, PostRepository
+- 이유: 댓글은 글에 딸린 데이터이므로 글을 통해서만 추가·삭제하고(댓글 리포지터리 없음), 글이 지워지면 댓글도 함께 지워지게 하기 위함
+- 결과: 서버 실행 시 SQL 로그에서 post, post_comment(post_id 포함) 테이블 생성 확인
