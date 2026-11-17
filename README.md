@@ -122,3 +122,11 @@
 - 작업: ApiV1PostControllerTest에 글 작성 테스트(t1). MockMvc로 POST 요청 → 처리한 컨트롤러·메서드, HTTP 201, resultCode, msg, data의 모든 필드를 DB의 최신 글과 비교. 이를 위해 PostRepository.findFirstByOrderByIdDesc, PostService.findLatest 추가
 - 이유: 과제 요구사항(글 작성 테스트케이스). 테스트마다 롤백되므로 항상 샘플 데이터 상태에서 검사
 - 결과: 글 작성 테스트 통과
+
+### 004-07 글 작성, 완료, 검증 실패를 400 RsData로 응답 (GlobalExceptionHandler)
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/004-07)
+- 강의: 14172 48·50·53강
+- 작업: @ControllerAdvice 전역 예외 처리기에서 MethodArgumentNotValidException을 `400-1` RsData(실패 항목을 "필드-검증종류-메시지"로 정렬)로 바꿔 HTTP 400 응답. 제목 없이 글 작성 시 400 테스트(t2) 추가
+- 이유: 검증 실패 시 스프링 기본 에러 JSON 대신, 성공 응답과 같은 RsData 모양으로 무엇이 틀렸는지 알려 주기 위함
+- 결과: `{"resultCode":"400-1","msg":"title-NotBlank-공백일 수 없습니다\ntitle-Size-크기가 2에서 100 사이여야 합니다","data":null}` (HTTP 400), 테스트 4개 통과

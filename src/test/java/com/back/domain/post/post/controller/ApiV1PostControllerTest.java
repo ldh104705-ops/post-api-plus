@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -65,5 +66,35 @@ public class ApiV1PostControllerTest {
                 .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 20))))
                 .andExpect(jsonPath("$.data.title").value("제목"))
                 .andExpect(jsonPath("$.data.content").value("내용"));
+    }
+
+    @Test
+    @DisplayName("글 작성, 제목 없이 요청하면 400")
+    void t2() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/api/v1/posts")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                        {
+                                            "title": "",
+                                            "content": "내용"
+                                        }
+                                        """)
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("write"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("400-1"))
+                // 빈 제목은 @NotBlank와 @Size(min = 2) 둘 다 실패한다
+                // 메시지 문장은 PC 언어 설정에 따라 영어/한글이 달라서, "필드-검증종류" 부분만 확인
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("title-NotBlank-")))
+                .andExpect(jsonPath("$.msg").value(Matchers.containsString("title-Size-")));
+
+        // 실패했으므로 글이 늘어나지 않아야 한다 (샘플 3건 그대로)
+        assertThat(postService.count()).isEqualTo(3);
     }
 }
