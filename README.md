@@ -194,3 +194,11 @@
 - 작업: PostService.flush() 추가, 댓글 작성 직후 flush()를 호출해 INSERT를 바로 실행
 - 이유: 006-03에서 응답을 만드는 시점에 댓글이 아직 INSERT 전이라 번호가 0이던 문제 해결. flush는 커밋이 아니라 "미뤄 둔 SQL을 지금 실행"이므로, 이후 오류가 나면 여전히 롤백됨
 - 결과: 댓글 작성 테스트 통과(TDD 초록). 실제 서버에서 `"6번 댓글이 작성되었습니다."`, id·날짜 정상. 없는 글에 작성은 404, 빈 내용은 400도 확인
+
+### 007-01 댓글 삭제, 시작, 실험(실패), @Transactional 없이 구현
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/007-01)
+- 강의: 14172 11강, 21강(DELETE 메서드)
+- 작업: PostService.deleteComment, 댓글 삭제 API `DELETE /api/v1/posts/{postId}/comments/{id}` 구현. 일부러 @Transactional을 붙이지 않음
+- 이유: 댓글 삭제는 "글의 댓글 목록에서 빼기 → orphanRemoval이 DELETE"로 동작하는데, 이것이 트랜잭션 없이도 되는지 확인
+- 결과: **실패**. 응답은 `"1번 댓글이 삭제되었습니다."`(200)인데, DB에는 1번 댓글이 그대로 있고 DELETE SQL도 실행되지 않음 → 다음 커밋에서 해결

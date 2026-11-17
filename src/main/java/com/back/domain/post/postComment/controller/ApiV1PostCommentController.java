@@ -49,4 +49,24 @@ public class ApiV1PostCommentController {
                 new PostCommentDto(postComment)
         );
     }
+
+    // 댓글 삭제: DELETE /api/v1/posts/{postId}/comments/{id}
+    // 실험: @Transactional 없이 만들어 본다 (강의 11강)
+    @DeleteMapping("/{id}")
+    public RsData<Void> delete(
+            @PathVariable int postId,
+            @PathVariable int id
+    ) {
+        Post post = postService.findById(postId).get();
+
+        // 없는 댓글이면 .get()에서 NoSuchElementException → 404
+        PostComment postComment = post.findCommentById(id).get();
+
+        postService.deleteComment(post, postComment);
+
+        return new RsData<>(
+                "200-1",
+                "%d번 댓글이 삭제되었습니다.".formatted(id)
+        );
+    }
 }
