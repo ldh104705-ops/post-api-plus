@@ -154,3 +154,11 @@
 - 작업: 글 삭제 테스트(t3). DELETE /api/v1/posts/1 → 처리한 컨트롤러·메서드, HTTP 200, `200-1`, msg 검사. 추가로 DB에서 1번 글이 사라졌는지, 댓글이 5건 → 2건으로 줄었는지(cascade) 확인
 - 이유: 과제 요구사항(글 삭제 테스트케이스). 응답만 보면 "삭제했다고 말한 것"만 확인되므로 DB에서 실제로 지워졌는지까지 증명
 - 결과: 테스트 5개 통과
+
+### 005-04 글 삭제, 완료, 없는 글이면 404 RsData로 응답
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/005-04)
+- 강의: 14172 48강
+- 작업: GlobalExceptionHandler에 NoSuchElementException → `404-1` RsData + HTTP 404 추가. 없는 글 삭제 시 404 테스트(t4) 추가
+- 이유: 없는 글을 지우려 하면 `findById(id).get()`에서 예외가 나 500(서버 오류)이 되던 것을, "찾을 수 없음"(404)으로 정확히 알려 주기 위함
+- 결과: DELETE /api/v1/posts/100 → `{"resultCode":"404-1","msg":"해당 데이터가 존재하지 않습니다.","data":null}` (HTTP 404), 테스트 6개 통과

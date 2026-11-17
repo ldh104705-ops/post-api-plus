@@ -131,4 +131,26 @@ public class ApiV1PostControllerTest {
                 .getSingleResult();
         assertThat(commentCount).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("글 삭제, 없는 글이면 404")
+    void t4() throws Exception {
+        int id = Integer.MAX_VALUE; // 샘플 데이터에 없는 번호
+
+        ResultActions resultActions = mvc
+                .perform(
+                        delete("/api/v1/posts/" + id)
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1PostController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("404-1"))
+                .andExpect(jsonPath("$.msg").value("해당 데이터가 존재하지 않습니다."));
+
+        // 아무것도 지워지지 않았다 (샘플 3건 그대로)
+        assertThat(postService.count()).isEqualTo(3);
+    }
 }
