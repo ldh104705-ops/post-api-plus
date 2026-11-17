@@ -74,3 +74,11 @@
 - 작업: BaseInitDataTest로 테스트 DB(메모리)에 글 3건, 댓글 5건(1번 글 3건, 2번 글 2건, 3번 글 0건)이 만들어지는지 검사
 - 이유: "글 3건, 댓글 5건 자동생성" 요구사항을 눈으로 확인하는 데서 끝내지 않고 테스트로 증명하기 위함. 이후 모든 테스트가 이 데이터를 전제로 함
 - 결과: BaseInitDataTest 통과
+
+### 004-01 글 작성, 시작, POST /api/v1/posts와 PostDto
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/004-01)
+- 강의: 14172 4강(@RestController), 6강(API 버저닝), 8~9강(PostDto record), 22·24강(@RequestBody, PostWriteReqBody)
+- 작업: ApiV1PostController에 글 작성 API 추가. 요청 JSON은 PostWriteReqBody로 받고, 응답은 엔티티 대신 PostDto(record)로 반환
+- 이유: 엔티티를 그대로 JSON으로 내보내면 글↔댓글 순환참조와 API 모양 변경 문제가 생기므로 DTO로 분리
+- 결과: `{"title":"제목 4","content":"내용 4"}` 요청 시 4번 글이 만들어지고 JSON 응답 확인. 단, 빈 제목/내용도 그대로 저장되는 문제 발견 → 다음 커밋에서 검증 추가
