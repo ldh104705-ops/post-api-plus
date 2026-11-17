@@ -42,3 +42,11 @@
 - 작업: Spring Boot 4.1.2 / Java 25 / Gradle Kotlin DSL 프로젝트 생성 (webmvc, Data JPA, H2, H2 콘솔, Lombok, DevTools), 설정 파일을 yaml로 작성하고 dev(파일 DB) / test(메모리 DB) 프로파일 분리
 - 이유: 개발 데이터는 서버를 껐다 켜도 남아야 하고, 테스트는 매번 깨끗한 DB에서 개발 데이터를 건드리지 않고 돌아야 하기 때문
 - 결과: contextLoads 테스트 통과(메모리 DB), 서버 실행 시 프로젝트 폴더에 db_dev.mv.db 생성 확인, localhost:8080 접속 시 404(아직 API 없음)
+
+### 002-01 엔티티, 시작, BaseEntity와 날짜 자동 기록
+- 날짜: 2026-11-17
+- [링크](https://github.com/ldh104705-ops/post-api-plus/tree/002-01)
+- 강의: 14172 3강
+- 작업: 모든 엔티티의 공통 필드(id, createDate, modifyDate)를 BaseEntity에 모으고, @EnableJpaAuditing으로 날짜가 자동 기록되게 함. id 기반 equals/hashCode 정의
+- 이유: 글과 댓글 모두 같은 공통 필드가 필요하므로 한 곳에서 관리하고, 날짜를 직접 넣는 실수를 없애기 위함
+- 결과: 컴파일과 contextLoads 테스트 통과 (아직 엔티티가 없어 테이블은 생기지 않음)
